@@ -2,22 +2,20 @@ package org.sid.ebankingbackend.config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
+import jakarta.servlet.FilterConfig;
 
-/**
- * @author ZAROUATI Ayoub
- */
+
 
 public class TokenFilter implements Filter {
 	
 	static  private String Authorization;
 	static  private String token;
 
-	/*@Override
+	@Override
     public void init(FilterConfig filterConfig) throws ServletException {
         // Initialization code if needed
-    }*/
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,7 +29,6 @@ public class TokenFilter implements Filter {
             // Do something with the token, for example, store it in a thread-local variable for later use
             this.setToken(token);
         }
-
         // Continue with the filter chain
         chain.doFilter(request, response);
     }

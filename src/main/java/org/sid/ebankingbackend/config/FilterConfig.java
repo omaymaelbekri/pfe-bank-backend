@@ -5,9 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-/**
- * @author ZAROUATI Ayoub
- */
+
 @Configuration
 public class  FilterConfig {
 

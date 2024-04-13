@@ -1,8 +1,4 @@
 package org.sid.ebankingbackend.services.user;
-
-
-
-
 import org.sid.ebankingbackend.dtos.IMapClassWithDto;
 import org.sid.ebankingbackend.dtos.user.UserUpdateDto;
 import org.sid.ebankingbackend.dtos.user.model.*;
@@ -107,15 +103,15 @@ public class UserService implements IUserService {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-		try {
+//		try {
 			oReponseToken = restTemplate.postForEntity(keycloakTokenUri, request, ReponseTokenDto.class).getBody();
 			if (oReponseToken != null)
 			{
 				accessToken = oReponseToken.getAccessToken();
 			}
-		} catch (Exception e) {
-			throw new APIErrorException(ErrorCode.E444);
-		}
+//		} catch (Exception e) {
+//			throw new APIErrorException(ErrorCode.E444);
+//		}
 
 		return mapperToken.convertToEntity(oReponseToken, TokenDto.class);
 	}
