@@ -40,6 +40,8 @@ public interface IUserService {
 
     UserDto updateUser(String IdKeycloak, UserUpdateDto userUpdateDto) throws APIErrorException;
 
+    List<User> getAllUser();
+
     void updateUserKeycloack(KeycloakUser keycloakUser, String id);
 
     KeycloakUser valideInsert(UserUpdateDto userUpdateDto) throws APIErrorException;

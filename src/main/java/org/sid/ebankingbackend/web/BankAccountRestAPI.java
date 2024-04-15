@@ -54,4 +54,9 @@ public class BankAccountRestAPI {
                 transferRequestDTO.getAccountDestination(),
                 transferRequestDTO.getAmount());
     }
+
+    @GetMapping("/operations")
+    public List<AccountOperationDTO> getAllOperations() {
+        return bankAccountService.accountHistory();
+    }
 }

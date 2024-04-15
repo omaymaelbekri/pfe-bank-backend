@@ -7,12 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
-/**
- * Logger l'exception dans un fichier de log.
- *
- * @author HRAIDA El Mehdi
- *
- */
+
 @Service
 class LoggerExceptionHandler extends DefaultExceptionHandler {
 

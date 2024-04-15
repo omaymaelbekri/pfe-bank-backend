@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.sid.ebankingbackend.dtos.user.UserUpdateDto;
 import org.sid.ebankingbackend.dtos.user.model.*;
+import org.sid.ebankingbackend.entities.User;
 import org.sid.ebankingbackend.exceptions.exceptions.APIErrorException;
 import org.sid.ebankingbackend.exceptions.exceptions.ApiError;
 import org.sid.ebankingbackend.services.user.UserService;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Tag(name = "User", description = "APIs - Login - Get User Infos")
@@ -118,14 +121,7 @@ public class UtilisateurController {
 			return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
 	}
 
-	/**
-	 * Endpoint to handle user signup requests.
-	 * This method receives a {@link UserSignup} DTO containing the necessary information
-	 * to create a new user, including their Keycloak and local user information, role assignments, and associated company.
-	 *
-	 * @param userSignup The {@link UserSignup} DTO with the new user's signup information.
-	 * @return A {@link ResponseEntity} indicating the result of the signup operation.
-	 */
+
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody UserSignup userSignup) throws APIErrorException {
 		try {
@@ -135,6 +131,14 @@ public class UtilisateurController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Signup failed: " + e.getMessage());
 		}
 	}
-
+	@GetMapping
+	public ResponseEntity<List<User>> getAllUsers() {
+		//	try {
+		List<User> userDtos = userService.getAllUser();
+		return new ResponseEntity<>(userDtos, HttpStatus.OK);
+		//	} catch (APIErrorException e) {
+		//	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		//	}
+	}
 
 }

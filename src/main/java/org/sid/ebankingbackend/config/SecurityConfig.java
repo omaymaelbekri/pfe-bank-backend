@@ -38,7 +38,7 @@ public class SecurityConfig {
         		.cors().and()
                 .authorizeHttpRequests(auth ->
                 {
-                    auth.requestMatchers("/api/v1/ramadan/user/**","/api/v1/ramadan/**","/","/swagger-ui/**", "/v3/api-docs/**","/api/v2/spring/referentiel/**").permitAll();
+                    auth.requestMatchers("/**","/api/v1/ramadan/user/**","/api/v1/ramadan/**","/","/swagger-ui/**", "/v3/api-docs/**","/api/v2/spring/referentiel/**").permitAll();
                     auth.anyRequest().authenticated();
                 });
 

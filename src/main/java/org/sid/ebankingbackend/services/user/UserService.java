@@ -180,6 +180,7 @@ public class UserService implements IUserService {
 			throw new APIErrorException(ErrorCode.E444);
 		}
 		UserKeycloak userKeycloak = userMapperService.fromUserInfoResponse(userInfoResponse);
+		insertUser(userKeycloak);
 		return userMapperService.convertKeycloakToDto(userKeycloak);
 	}
 
@@ -306,6 +307,16 @@ public void addHistorique(User user){
 		 userRepository.save(user);
 		 return userServiceMapper.convertToDto(userRepository.save(user),UserDto.class);
     }
+	}
+	@Override
+	public List<User> getAllUser() {
+		//  try {
+		List<User> users = userRepository.findAll();
+
+		return users;
+		// } catch (Exception e) {
+		//      throw new APIErrorException(ErrorCode.E500);
+		// }
 	}
 	@Override
  public void updateUserKeycloack(KeycloakUser keycloakUser, String id){

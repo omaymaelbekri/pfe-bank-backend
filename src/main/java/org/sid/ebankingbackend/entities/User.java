@@ -16,7 +16,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "api_user")
-@Where(clause = "is_delete = false and is_statut = true")
 public class User extends BaseModel {	
 	
 	/**

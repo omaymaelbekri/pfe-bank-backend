@@ -16,17 +16,12 @@
  import org.springframework.context.annotation.Bean;
  import org.springframework.context.annotation.Configuration;
 
-/**
- * @author ZAROUATI Ayoub
- */
+
 
 @Configuration
 public class  SwaggerConfig {
 	
-	/**
-	 * Documentation Swagger 3 with security token 
-	 * @author ZAROUATI Ayoub
-	 */
+
     @Value("${BASE-URL-SWAGGER}")
 	private String urlServer ;
 
