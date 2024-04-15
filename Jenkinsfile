@@ -1,22 +1,38 @@
-pipeline{
-  agent any
-tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven"
+pipeline {
+    agent any
+    tools{
+        maven 'maven'
+        git 'git'
     }
-
-  stages{
-        stage('Build'){
-            steps{
-                bat 'mvn -Dmaven.test.skip=true clean install'
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/omaymaelbekri/pfe-bank-backend'
             }
         }
-        stage('Test Service'){
-              steps{
-                  bat 'mvn test -Dtest=BankAccountServiceImplTest'
-                  bat 'mvn test -Dtest=BankServiceTest'
-              }
+
+        stage('Build') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'mvn clean install'
+                    } else {
+                        bat 'mvn clean install'
+                    }
+                }
+            }
         }
 
+        stage('Test') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'mvn test'
+                    } else {
+                        bat 'mvn test'
+                    }
+                }
+            }
         }
+    }
 }
