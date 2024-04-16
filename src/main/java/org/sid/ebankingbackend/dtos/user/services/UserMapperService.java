@@ -4,7 +4,6 @@ package org.sid.ebankingbackend.dtos.user.services;
 import org.sid.ebankingbackend.dtos.user.model.KeycloakUser;
 import org.sid.ebankingbackend.dtos.user.model.UserDto;
 import org.sid.ebankingbackend.dtos.user.model.UserKeycloak;
-import org.sid.ebankingbackend.dtos.user.model.UserSignup;
 import org.sid.ebankingbackend.dtos.user.model.userInfoDto.UserInfoResponse;
 import org.sid.ebankingbackend.entities.User;
 import org.springframework.stereotype.Service;
@@ -52,14 +51,6 @@ public class UserMapperService implements IUserMapperService {
         user.setEmailVerified(keycloakUser.isEmailVerified());
         return user;
     }
-    @Override
-    public KeycloakUser mapToKeycloakUser(UserSignup user) {
-        KeycloakUser keycloakUser = new KeycloakUser();
-        keycloakUser.setUsername(user.getEmail());
-        keycloakUser.setEmail(user.getEmail());
-        keycloakUser.setFirstName(user.getName());
-        keycloakUser.setLastName(user.getFamillyName());
-        return keycloakUser;
-    }
+
 
 }

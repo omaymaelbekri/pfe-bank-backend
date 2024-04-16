@@ -155,14 +155,6 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public void getRefreshToken() throws APIErrorException {
-		LoginDto loginDto = new LoginDto() ;
-		loginDto.setPassword("3ichamohamed@22@ahmed");
-		loginDto.setUsername("admin");
-		TokenDto tokenDto = login(loginDto);
-		accessTokenAdmin =tokenDto.getAccessToken();
-	}
-	@Override
 	public UserDto getInfo() throws APIErrorException {
 		UserInfoResponse userInfoResponse = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -212,102 +204,11 @@ public class UserService implements IUserService {
 
 		return ouserResponse;
 	}
-@Override
-public void addHistorique(User user){
-		Historique_Login historiqueLogin = new Historique_Login();
-		historiqueLogin.setOuser(user);
-		historiqueLoginRepository.save(historiqueLogin);
-	}
-	@Override
-	public void addUser(KeycloakUser loginDto) throws APIErrorException {
-		getRefreshToken();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set(AUTHORIZATION, bearer + accessTokenAdmin);
-		HttpEntity<KeycloakUser> request = new HttpEntity<>(loginDto, headers);
-		ResponseEntity<String> response = restTemplate.exchange(
-				addUserUrl,
-				HttpMethod.POST,
-				request,
-				String.class);
-		if (response.getStatusCode() != HttpStatus.CREATED) {
-			throw new APIErrorException(ErrorCode.E444);
-		} else {
-			System.out.println("user added successfully");
-		}
-	}
-	/**
-	 * Handles the signup process for a new user, including user creation in Keycloak, local user creation, role assignment, and company creation.
-	 * This method performs several steps to ensure a new user is properly set up:
-	 * 1. Checks if the provided password and confirmation password match.
-	 * 2. Maps the {@link UserSignup} DTO to a {@link KeycloakUser} object for Keycloak.
-	 * 3. Adds the new user to Keycloak using the {@code addUser} method.
-	 * 4. Logs in the new user to obtain access tokens.
-	 * 5. Retrieves the new user's information from Keycloak.
-	 * 6. Assigns the specified role to the new user in Keycloak.
-	 * 7. Converts the Keycloak user information to a local {@link User} entity and saves it.
-	 * 8. Creates a new company associated with the user.
-	 *
-	 * @param userSignup The {@link UserSignup} DTO containing information for the new user's signup process.
-	 * @throws APIErrorException If any step in the process fails, an {@link APIErrorException} is thrown with the appropriate error code.
-	 */
-	@Override
-	public void signup(UserSignup userSignup) throws APIErrorException {
-		if (userSignup == null){
-			throw new APIErrorException(ErrorCode.A333);
-		}
-		else {
-			passwordCheck(userSignup.getPassword(), userSignup.getConfirmPassword());
-			KeycloakUser keycloakUser = userMapperService.mapToKeycloakUser(userSignup);
-			PasswordInfo passwordInfo = new PasswordInfo();
-			passwordInfo.setValue(userSignup.getPassword());
-			passwordInfo.setTemporary(false);
-			passwordInfo.setType("password");
-			List<Object> list = new ArrayList<>();
-			list.add(passwordInfo);
-			keycloakUser.setCredentials(list);
-			keycloakUser.setEnabled(true);
-			addUser(keycloakUser);
-			LoginDto loginDto = new LoginDto();
-			loginDto.setPassword(userSignup.getPassword());
-			loginDto.setUsername(userSignup.getEmail());
-			login(loginDto);
-			UserDto userDto = getInfo();
-			RoleAssignment roleAssignment = new RoleAssignment();
-			roleAssignment.setId(roleId);
-			roleAssignment.setName("responsable");
-			List<RoleAssignment> roleAssignments = new ArrayList<>();
-			roleAssignments.add(roleAssignment);
-			roleMappings(userDto.getIdKeycloak(), roleAssignments);
-			User user = userServiceMapper.convertToEntity(userDto, User.class);
-			user.setTelephone(userSignup.getTelephone());
-			userRepository.save(user);
 
-		}
-	}
-	@Override
-	public boolean passwordCheck(String password , String passwordCofirmation) throws APIErrorException {
-		if (!password.equals(passwordCofirmation)){
-			throw new APIErrorException(ErrorCode.A020);
-		}
-		return true;
-	}
-	@Override
-	public UserDto updateUser(String idKeycloak, UserUpdateDto userUpdateDto) throws APIErrorException {
-     User user =  userRepository.findByIdKeycloak(idKeycloak);
-	 if (user==null){
-		 throw new APIErrorException(ErrorCode.A044);
-	 }
-	 else {
-		 KeycloakUser keycloakUser = valideInsert(userUpdateDto);
-		 updateUserKeycloack( keycloakUser, user.getIdKeycloak());
-		 user.setEmail(userUpdateDto.getEmail());
-		 user.setName(userUpdateDto.getName());
-		 user.setFamillyName(userUpdateDto.getFamillyName());
-		 userRepository.save(user);
-		 return userServiceMapper.convertToDto(userRepository.save(user),UserDto.class);
-    }
-	}
+
+
+
+
 	@Override
 	public List<User> getAllUser() {
 		//  try {
@@ -318,88 +219,9 @@ public void addHistorique(User user){
 		//      throw new APIErrorException(ErrorCode.E500);
 		// }
 	}
-	@Override
- public void updateUserKeycloack(KeycloakUser keycloakUser, String id){
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.set(AUTHORIZATION, bearer + accessTokenAdmin);
-			HttpEntity<KeycloakUser> request = new HttpEntity<>(keycloakUser, headers);
-			 restTemplate.exchange(UpdateUserUrl+"/"+id, HttpMethod.PUT, request, String.class);
-		}
 
-		@Override
-		public KeycloakUser valideInsert(UserUpdateDto userUpdateDto) throws APIErrorException {
-			KeycloakUser keycloakUser = new KeycloakUser();
-		if (userUpdateDto==null){
-			throw new APIErrorException(ErrorCode.A044);
-		}
-		else if (userUpdateDto.getFamillyName()!=null){
-			keycloakUser.setLastName(userUpdateDto.getFamillyName());
-			}
-		else if (userUpdateDto.getName()!=null){
-			keycloakUser.setFirstName(userUpdateDto.getName());			}
-		else if (userUpdateDto.getEmail()!=null){
-			keycloakUser.setEmail(userUpdateDto.getEmail());			}
 
-			return keycloakUser;
-	}
-	@Override
-	public void emailVerifie(String id) throws APIErrorException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.set(AUTHORIZATION, bearer + accessTokenAdmin);
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add(CLIENT_ID, admin_Client);
-		map.add("redirect_uri", redirect_uri);
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-		try {
-		restTemplate.postForEntity(emailVerifie +id+"/send-verify-email", request, String.class).getBody();
-		} catch (Exception e) {
-			throw new APIErrorException(ErrorCode.E444);
-		}
-	}
-	@Override
-	public void resetPassword(ResetPassword resetPassword) throws APIErrorException {
-		UserDto userDto = getInfo();
-		LoginDto loginDto = new LoginDto();
-		loginDto.setPassword(resetPassword.getOldPassword());
-		loginDto.setUsername(userDto.getEmail());
-		login(loginDto);
-		System.out.println(userDto.getIdKeycloak());
-		passwordCheck(resetPassword.getConfirmPassword(),resetPassword.getNewPassword());
-		PasswordInfo passwordInfo = new PasswordInfo();
-		passwordInfo.setType("password");
-		passwordInfo.setValue(resetPassword.getNewPassword());
-		passwordInfo.setTemporary(false);
-		resetPasswordKeycloack(userDto.getIdKeycloak(), passwordInfo);
-	}
-
-	public void resetPasswordKeycloack(String id, PasswordInfo passwordInfo) throws APIErrorException {
-		HttpHeaders headers = new HttpHeaders();
-		getRefreshToken();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set(AUTHORIZATION, bearer + accessTokenAdmin);
-		HttpEntity<PasswordInfo> request = new HttpEntity<>(passwordInfo, headers);
-//		try {
-			restTemplate.exchange(passwordReset +"/"+id+"/reset-password",HttpMethod.PUT, request, String.class).getBody();
-//		} catch (Exception e) {
-//			throw new APIErrorException(ErrorCode.E444);
-//		}
-	}
-	@Override
-	public void roleMappings(String id, List<RoleAssignment> roleAssignment) throws APIErrorException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set(AUTHORIZATION, bearer + accessTokenAdmin);
-		HttpEntity<List<RoleAssignment>> request = new HttpEntity<>(roleAssignment, headers);
-		try {
-			restTemplate.postForEntity(roleMapping +"/"+id+"/"+roleMappingClients, request, String.class).getBody();
-		} catch (Exception e) {
-			throw new APIErrorException(ErrorCode.E444);
-		}
-	}
 
 
 }

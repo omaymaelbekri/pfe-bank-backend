@@ -91,46 +91,8 @@ public class UtilisateurController {
 			return userInfo;
     }
 
-	@PostMapping("/users")
-	public ResponseEntity<String> addUserToKeycloak(@RequestBody KeycloakUser loginDto) {
-		try {
-			userService.addUser(loginDto);
-			return new ResponseEntity<>("Utilisateur ajouté avec succès à Keycloak.", HttpStatus.CREATED);
-		} catch (APIErrorException e) {
-			return new ResponseEntity<>("Erreur lors de l'ajout de l'utilisateur à Keycloak.", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	@PutMapping("/user/{id}/update")
-	public ResponseEntity<String> updateUser(@RequestParam("id") String id , @RequestBody UserUpdateDto userUpdateDto){
-		try {
-            userService.updateUser(id, userUpdateDto);
-            return new ResponseEntity<>("Utilisateur modifié avec succès.", HttpStatus.OK);
-        } catch (APIErrorException e) {
-            return new ResponseEntity<>("Erreur lors de la modification de l'utilisateur.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-	}
-	@PostMapping("/email-verifie")
-	public ResponseEntity<String> emailVerifie(@RequestParam String id) throws APIErrorException {
-			userService.emailVerifie(id);
-			return ResponseEntity.ok("Email vérifié avec succès");
-	}
-
-	@PostMapping("/reset-password")
-	public ResponseEntity<?> resetPassword( @RequestBody ResetPassword passwordInfo) throws APIErrorException {
-			userService.resetPassword(passwordInfo);
-			return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
-	}
 
 
-	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody UserSignup userSignup) throws APIErrorException {
-		try {
-			userService.signup(userSignup);
-			return ResponseEntity.status(HttpStatus.CREATED).body("User successfully signed up");
-		} catch (APIErrorException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Signup failed: " + e.getMessage());
-		}
-	}
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {
 		//	try {

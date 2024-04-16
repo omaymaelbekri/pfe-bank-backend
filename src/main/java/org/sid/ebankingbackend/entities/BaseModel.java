@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public abstract class BaseModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -53,15 +52,7 @@ public abstract class BaseModel implements Serializable {
 		this.isStatut = true;
 	}
 
-	@PreUpdate
-	public void preUpdate() {
 
-	}
-
-	@PreRemove
-	public void preRemove() {
-
-	}
 
 	@PreDestroy
 	public void preDestroy() {

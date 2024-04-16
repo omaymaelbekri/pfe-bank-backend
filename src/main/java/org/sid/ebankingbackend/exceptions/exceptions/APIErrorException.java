@@ -16,13 +16,5 @@ public class APIErrorException extends Exception {
 		this.apiError = new ApiError(code, code.toString());
 	}
 
-	public APIErrorException(ErrorCode code, String message) {
-		super();
-		this.apiError = new ApiError(code, message);
-	}
-
-	public ApiError getApiError() {
-		return apiError;
-	}
 
 }

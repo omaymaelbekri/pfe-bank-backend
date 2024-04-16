@@ -5,9 +5,6 @@ import java.io.Serializable;
 
 public class ApiError implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4130929122515363388L;
 	
 	private ErrorCode code;

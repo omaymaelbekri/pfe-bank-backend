@@ -33,37 +33,37 @@ public class  SwaggerConfig {
 	
 
     @Bean
-    OpenAPI myOpenAPI() {
+OpenAPI myOpenAPI() {
 
-        Contact contact = new Contact();
-        contact.setEmail("ayoub.zerouati@gmail.com");
-        contact.setName("Ayoub");
-        contact.setUrl("https://www.swagger.ma");
+    Contact contact = new Contact();
+    contact.setEmail("elbekriomayma@gmail.com");
+    contact.setName("Omayma");
+    contact.setUrl("https://www.swagger.ma");
 
-        License mitLicense = new License().name("MIT License").url("https://opensource.org/licenses/MIT");
+    License mitLicense = new License().name("MIT License").url("https://opensource.org/licenses/MIT");
 
-        Info info = new Info()
-                .title("Facade API PROTOTYPE")
-                .version("2.0")
-                .contact(contact)
-                .description("Explore and interact with our API using this Swagger documentation. "
-                		+ "This API provides a comprehensive set of endpoints for managing various aspects of our system. "
-                		+ "From user authentication to data retrieval and updates, this documentation outlines the details of each API operation, "
-                		+ "including request and response formats. Feel free to test API calls directly from this Swagger UI to better understand how our services work. "
-                		+ "If you have any questions or need further assistance, please refer to our support documentation or contact our technical support team.")
-                .termsOfService("")
-            	.license(mitLicense);
-        		
-        
+    Info info = new Info()
+            .title("Digital Banking API")
+            .version("2.0")
+            .contact(contact)
+            .description("This Digital Banking API allows clients to interact with banking services digitally. "
+                    + "It covers a wide range of functionalities including account management, transaction processing, "
+                    + "online payments, and financial reporting. Users can securely authenticate, view account balances, "
+                    + "initiate transfers, and manage their personal finance data through our endpoints. "
+                    + "This documentation provides detailed information on how to utilize the API to its full potential, "
+                    + "including examples of requests and responses for each available operation. "
+                    + "For additional support or inquiries, please reach out to our customer service team.")
+            .termsOfService("")
+            .license(mitLicense);
 
-        return new OpenAPI()	
-    						.addSecurityItem(new SecurityRequirement()
-								.addList("Bearer Authentication"))
-								.components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
-							.info(info)
-							.addServersItem(new Server().url(urlServer).description("Server"));
-							
-    }
+    return new OpenAPI()
+                        .addSecurityItem(new SecurityRequirement()
+                            .addList("Bearer Authentication"))
+                            .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
+                        .info(info)
+                        .addServersItem(new Server().url(urlServer).description("Server"));
+
+}
 
 
     @Bean
@@ -76,7 +76,7 @@ public class  SwaggerConfig {
     }
     @Bean
     GroupedOpenApi referentiel() { // group all APIs with `operation` in the path
-      return GroupedOpenApi.builder().group("5- REFERENTIEL").pathsToMatch("/**/referentiel/**").build();
+      return GroupedOpenApi.builder().group("5- accounts").pathsToMatch("/accounts/**").build();
     }
 
     @Bean

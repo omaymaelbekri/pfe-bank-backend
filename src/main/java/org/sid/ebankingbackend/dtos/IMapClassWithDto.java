@@ -3,7 +3,7 @@ package org.sid.ebankingbackend.dtos;
 import java.util.Collection;
 import java.util.List;
 
-public interface IMapClassWithDto<E, D> {
+public interface  IMapClassWithDto<E, D> {
 
 	D convertToDto(E entity, Class<D> dtoClass);
 
